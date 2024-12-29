@@ -129,7 +129,7 @@
 
         function updateGraph(acceleration) {
             movementData.push(acceleration);
-            time += 0.10;
+            time += 0.05;  // Slow down time increment by reducing the value (e.g., 0.05 instead of 0.1)
 
             if (movementData.length > 20) {
                 movementData.shift();
@@ -181,7 +181,6 @@
                 Experimt uses your device's motion sensors to measure acceleration in real-time. The graph below shows the magnitude of the movement as detected by the device's accelerometer.
             </p>
             <div id="graph-container">
-                
                 <canvas id="movementGraph"></canvas>
             </div>
         </div>
