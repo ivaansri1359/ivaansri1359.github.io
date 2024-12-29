@@ -41,7 +41,7 @@
             margin: 0;
             margin-top: 20px;
         }
-        #graph-container, #sound-visualization-container {
+        #graph-container {
             position: relative;
             margin: 20px auto;
             max-width: 800px;
@@ -70,6 +70,30 @@
         .stat {
             font-size: 1.2em;
         }
+        #compass-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #compass {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 5px solid #333;
+            display: inline-block;
+            position: relative;
+            margin-top: 20px;
+        }
+        #needle {
+            width: 4px;
+            height: 50%;
+            background-color: red;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: 50% 100%;
+            transform: rotate(0deg);
+            transition: transform 0.1s ease-out;
+        }
     </style>
     <script>
         let chart = null;
@@ -85,12 +109,6 @@
         let lastSecondUpdate = performance.now();
         let totalMovementInLastSecond = 0;
         let previousAcceleration = 0;
-
-        // For microphone sound visualization
-        let audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        let analyser = audioContext.createAnalyser();
-        let microphoneStream = null;
-        let isMicActive = false;
 
         // Initialize graph for movement
         function initializeGraph() {
@@ -193,60 +211,27 @@
             isFullscreen = !isFullscreen;
         }
 
-        // Start microphone and sound visualization
-        function startMic() {
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ audio: true })
-                    .then((stream) => {
-                        microphoneStream = stream;
-
-                        // Create MediaStreamSource (only for visualization, not for playback)
-                        const microphoneSource = audioContext.createMediaStreamSource(stream);
-                        microphoneSource.connect(analyser); // Connect to analyser
-
-                        initializeSoundVisualization(); // Initialize sound visualization
-                        isMicActive = true;
-                    })
-                    .catch((error) => {
-                        console.error("Error accessing the microphone:", error);
-                        alert("Microphone access denied.");
-                    });
-            }
+        // Update the compass based on device orientation
+        function updateCompass(event) {
+            const compass = document.getElementById('needle');
+            const compassDegree = event.alpha; // Getting the compass heading (in degrees)
+            compass.style.transform = `rotate(${compassDegree}deg)`;
         }
 
-        // Initialize sound visualization
-        function initializeSoundVisualization() {
-            const canvas = document.getElementById('sound-visualization');
-            const ctx = canvas.getContext('2d');
-            analyser.fftSize = 256; // Set the size of the FFT (Fast Fourier Transform)
-            const bufferLength = analyser.frequencyBinCount;
-            const dataArray = new Uint8Array(bufferLength);
-
-            function draw() {
-                analyser.getByteFrequencyData(dataArray); // Get frequency data from the analyser
-                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-
-                const barWidth = (canvas.width / bufferLength) * 2.5; // Width of each bar
-                let x = 0;
-
-                // Draw the frequency bars
-                for (let i = 0; i < bufferLength; i++) {
-                    const barHeight = dataArray[i];
-                    ctx.fillStyle = 'rgba(0, 255, 0, 0.7)';
-                    ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight); // Draw bars
-                    x += barWidth + 1;
-                }
-
-                requestAnimationFrame(draw); // Request the next frame to keep drawing
+        // Start listening to device orientation
+        function startCompass() {
+            if (window.DeviceOrientationEvent) {
+                window.addEventListener('deviceorientation', updateCompass);
+            } else {
+                alert("DeviceOrientationEvent is not supported on your device.");
             }
-
-            draw(); // Start the drawing loop
         }
 
         window.onload = function () {
             startTime = performance.now();
             initializeGraph();
             startDeviceMotion();
+            startCompass();
 
             setInterval(() => {
                 updateStats();  // Update stats continuously
@@ -273,10 +258,12 @@
                 <canvas id="movementGraph"></canvas>
             </div>
 
-            <!-- Sound Visualization Section -->
-            <div id="sound-visualization-container">
-                <button class="btn" onclick="startMic()">Start Mic</button>
-                <canvas id="sound-visualization"></canvas>
+            <!-- Compass Section -->
+            <div id="compass-container">
+                <div id="compass">
+                    <div id="needle"></div>
+                </div>
+                <p>Compass</p>
             </div>
         </div>
     </main>
