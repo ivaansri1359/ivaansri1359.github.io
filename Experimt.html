@@ -129,7 +129,7 @@
 
         function updateGraph(acceleration) {
             movementData.push(acceleration);
-            time += 0.05;  // Slow down time increment by reducing the value (e.g., 0.05 instead of 0.1)
+            time += 1;  // Slow down time increment by reducing the value (e.g., 0.05 instead of 0.1)
 
             if (movementData.length > 20) {
                 movementData.shift();
