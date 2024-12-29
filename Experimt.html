@@ -41,7 +41,7 @@
             margin: 0;
             margin-top: 20px;
         }
-        #graph-container {
+        #graph-container, #sound-visualization-container {
             position: relative;
             margin: 20px auto;
             max-width: 800px;
@@ -50,26 +50,6 @@
         canvas {
             width: 100%;
             height: 400px;
-        }
-        .fullscreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1000;
-            background-color: white;
-            padding: 10px;
-            overflow: hidden;
-        }
-        .fullscreen canvas {
-            width: 100%;
-            height: 100%;
-        }
-        .fullscreen-buttons {
-            position: absolute;
-            top: 10px;
-            right: 10px;
         }
         .btn {
             background-color: #007bff;
@@ -100,12 +80,19 @@
         let currentMovement = 0;
         let isFullscreen = false;
 
-        // To calculate the movement every second
+        // For movement stats tracking every second
         let secondCounter = 0;
-        let lastSecondUpdate = performance.now();  // Track last second update time
-        let totalMovementInLastSecond = 0;  // Movement sum for the current second
+        let lastSecondUpdate = performance.now();
+        let totalMovementInLastSecond = 0;
         let previousAcceleration = 0;
 
+        // For microphone sound visualization
+        let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let analyser = audioContext.createAnalyser();
+        let microphoneStream = null;
+        let isMicActive = false;
+
+        // Initialize graph for movement
         function initializeGraph() {
             const ctx = document.getElementById('movementGraph').getContext('2d');
             chart = new Chart(ctx, {
@@ -143,6 +130,7 @@
             });
         }
 
+        // Update movement graph with new data
         function updateGraph(acceleration) {
             movementData.push(acceleration);
             if (movementData.length > 20) {
@@ -164,24 +152,22 @@
             updateStats();
         }
 
+        // Update stats
         function updateStats() {
             const timeInMs = performance.now();
             document.getElementById('sec').innerText = `Movement in sec: ${Math.floor(timeInMs / 1000)}s`;
             document.getElementById('movement').innerText = `Current Movement: ${currentMovement} m/s²`;
             document.getElementById('peak').innerText = `Peak Movement: ${peakMovement} m/s²`;
 
-            // Update every second
             if (timeInMs - lastSecondUpdate >= 1000) {
-                // Calculate and display the movement during the last second
                 const movementThisSecond = totalMovementInLastSecond.toFixed(2);
                 document.getElementById('secMovement').innerText = `Movement in last second: ${movementThisSecond} m/s²`;
-
-                // Reset the movement counter for the next second
                 totalMovementInLastSecond = 0;
                 lastSecondUpdate = timeInMs;
             }
         }
 
+        // Start device motion event listener
         function startDeviceMotion() {
             if (window.DeviceMotionEvent) {
                 window.addEventListener('devicemotion', (event) => {
@@ -196,6 +182,7 @@
             }
         }
 
+        // Toggle fullscreen for the graph
         function toggleFullscreen() {
             const graphContainer = document.getElementById('graph-container');
             if (isFullscreen) {
@@ -206,15 +193,64 @@
             isFullscreen = !isFullscreen;
         }
 
+        // Start microphone and sound visualization
+        function startMic() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then((stream) => {
+                        microphoneStream = stream;
+
+                        // Create MediaStreamSource (only for visualization, not for playback)
+                        const microphoneSource = audioContext.createMediaStreamSource(stream);
+                        microphoneSource.connect(analyser); // Connect to analyser
+
+                        initializeSoundVisualization(); // Initialize sound visualization
+                        isMicActive = true;
+                    })
+                    .catch((error) => {
+                        console.error("Error accessing the microphone:", error);
+                        alert("Microphone access denied.");
+                    });
+            }
+        }
+
+        // Initialize sound visualization
+        function initializeSoundVisualization() {
+            const canvas = document.getElementById('sound-visualization');
+            const ctx = canvas.getContext('2d');
+            analyser.fftSize = 256; // Set the size of the FFT (Fast Fourier Transform)
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            function draw() {
+                analyser.getByteFrequencyData(dataArray); // Get frequency data from the analyser
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+
+                const barWidth = (canvas.width / bufferLength) * 2.5; // Width of each bar
+                let x = 0;
+
+                // Draw the frequency bars
+                for (let i = 0; i < bufferLength; i++) {
+                    const barHeight = dataArray[i];
+                    ctx.fillStyle = 'rgba(0, 255, 0, 0.7)';
+                    ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight); // Draw bars
+                    x += barWidth + 1;
+                }
+
+                requestAnimationFrame(draw); // Request the next frame to keep drawing
+            }
+
+            draw(); // Start the drawing loop
+        }
+
         window.onload = function () {
             startTime = performance.now();
             initializeGraph();
             startDeviceMotion();
 
-            // Update the stats every millisecond
             setInterval(() => {
                 updateStats();  // Update stats continuously
-            }, 10); // Update every 10ms
+            }, 10);
         };
     </script>
 </head>
@@ -232,10 +268,15 @@
                 <div class="stat" id="sec">Movement in sec: 0s</div>
                 <div class="stat" id="movement">Current Movement: 0 m/s²</div>
                 <div class="stat" id="peak">Peak Movement: 0 m/s²</div>
-                <div class="stat" id="secMovement">Movement in last second: 0 m/s²</div>
             </div>
             <div id="graph-container">
                 <canvas id="movementGraph"></canvas>
+            </div>
+
+            <!-- Sound Visualization Section -->
+            <div id="sound-visualization-container">
+                <button class="btn" onclick="startMic()">Start Mic</button>
+                <canvas id="sound-visualization"></canvas>
             </div>
         </div>
     </main>
