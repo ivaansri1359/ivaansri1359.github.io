@@ -103,7 +103,8 @@
         // To calculate the movement every second
         let secondCounter = 0;
         let lastSecondUpdate = performance.now();  // Track last second update time
-        let totalMovementInLastSecond = 0;
+        let totalMovementInLastSecond = 0;  // Movement sum for the current second
+        let previousAcceleration = 0;
 
         function initializeGraph() {
             const ctx = document.getElementById('movementGraph').getContext('2d');
@@ -157,6 +158,7 @@
                 peakMovement = acceleration;
             }
 
+            // Track movement for each second
             totalMovementInLastSecond += acceleration;
 
             updateStats();
@@ -170,10 +172,11 @@
 
             // Update every second
             if (timeInMs - lastSecondUpdate >= 1000) {
-                // Update the movement every second
-                document.getElementById('secMovement').innerText = `Movement in last second: ${(totalMovementInLastSecond).toFixed(2)} m/s²`;
+                // Calculate and display the movement during the last second
+                const movementThisSecond = totalMovementInLastSecond.toFixed(2);
+                document.getElementById('secMovement').innerText = `Movement in last second: ${movementThisSecond} m/s²`;
 
-                // Reset counters for next second
+                // Reset the movement counter for the next second
                 totalMovementInLastSecond = 0;
                 lastSecondUpdate = timeInMs;
             }
