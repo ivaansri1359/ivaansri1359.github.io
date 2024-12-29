@@ -75,8 +75,8 @@
             text-align: center;
         }
         #compass {
-            width: 100px;
-            height: 100px;
+            width: 200px;
+            height: 200px;
             border-radius: 50%;
             border: 5px solid #333;
             display: inline-block;
@@ -93,6 +93,42 @@
             transform-origin: 50% 100%;
             transform: rotate(0deg);
             transition: transform 0.1s ease-out;
+        }
+        #directions {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%);
+            font-size: 1.2em;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #directions span {
+            position: absolute;
+            font-weight: bold;
+        }
+        #directions #n {
+            top: 10px;
+            transform: translateX(-50%);
+        }
+        #directions #s {
+            bottom: 10px;
+            transform: translateX(-50%);
+        }
+        #directions #e {
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+        }
+        #directions #w {
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
         }
     </style>
     <script>
@@ -213,9 +249,14 @@
 
         // Update the compass based on device orientation
         function updateCompass(event) {
+            // Adjust the compass rotation to match the device's alpha (heading) value
             const compass = document.getElementById('needle');
             const compassDegree = event.alpha; // Getting the compass heading (in degrees)
-            compass.style.transform = `rotate(${compassDegree}deg)`;
+
+            // Adjust the degree for correct needle rotation
+            const adjustedDegree = (360 - compassDegree) % 360;
+
+            compass.style.transform = `rotate(${adjustedDegree}deg)`;
         }
 
         // Start listening to device orientation
@@ -241,7 +282,7 @@
 </head>
 <body>
     <header>
-        <h1>Experimt</h1>
+        <h1><a href="index.html">./</a>Experimt</h1>
     </header>
     <main>
         <div class="content">
@@ -262,6 +303,12 @@
             <div id="compass-container">
                 <div id="compass">
                     <div id="needle"></div>
+                    <div id="directions">
+                        <span id="n">N</span>
+                        <span id="e">E</span>
+                        <span id="s">S</span>
+                        <span id="w">W</span>
+                    </div>
                 </div>
                 <p>Compass</p>
             </div>
