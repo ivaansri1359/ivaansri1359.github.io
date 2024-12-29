@@ -83,12 +83,27 @@
         .btn:hover {
             background-color: #0056b3;
         }
+        #stats {
+            text-align: left;
+            margin-top: 20px;
+        }
+        .stat {
+            font-size: 1.2em;
+        }
     </style>
     <script>
         let chart = null;
-        let time = 0;
+        let startTime = 0; // For tracking time in milliseconds
+        let lastTime = 0;  // Last update time
         let movementData = [];
+        let peakMovement = 0;
+        let currentMovement = 0;
         let isFullscreen = false;
+
+        // To calculate the movement every second
+        let secondCounter = 0;
+        let lastSecondUpdate = performance.now();  // Track last second update time
+        let totalMovementInLastSecond = 0;
 
         function initializeGraph() {
             const ctx = document.getElementById('movementGraph').getContext('2d');
@@ -111,7 +126,7 @@
                     maintainAspectRatio: false,
                     scales: {
                         x: {
-                            title: { display: true, text: 'Time (s)' },
+                            title: { display: true, text: 'Time (ms)' },
                             grid: { display: false }
                         },
                         y: {
@@ -129,15 +144,39 @@
 
         function updateGraph(acceleration) {
             movementData.push(acceleration);
-            time += 1;  // Slow down time increment by reducing the value (e.g., 0.05 instead of 0.1)
-
             if (movementData.length > 20) {
                 movementData.shift();
             }
 
-            chart.data.labels = Array.from({ length: movementData.length }, (_, i) => time - movementData.length + i + 1);
+            chart.data.labels = Array.from({ length: movementData.length }, (_, i) => (startTime + i));
             chart.data.datasets[0].data = movementData;
             chart.update();
+
+            currentMovement = acceleration;
+            if (acceleration > peakMovement) {
+                peakMovement = acceleration;
+            }
+
+            totalMovementInLastSecond += acceleration;
+
+            updateStats();
+        }
+
+        function updateStats() {
+            const timeInMs = performance.now();
+            document.getElementById('sec').innerText = `Movement in sec: ${Math.floor(timeInMs / 1000)}s`;
+            document.getElementById('movement').innerText = `Current Movement: ${currentMovement} m/s²`;
+            document.getElementById('peak').innerText = `Peak Movement: ${peakMovement} m/s²`;
+
+            // Update every second
+            if (timeInMs - lastSecondUpdate >= 1000) {
+                // Update the movement every second
+                document.getElementById('secMovement').innerText = `Movement in last second: ${(totalMovementInLastSecond).toFixed(2)} m/s²`;
+
+                // Reset counters for next second
+                totalMovementInLastSecond = 0;
+                lastSecondUpdate = timeInMs;
+            }
         }
 
         function startDeviceMotion() {
@@ -165,8 +204,14 @@
         }
 
         window.onload = function () {
+            startTime = performance.now();
             initializeGraph();
             startDeviceMotion();
+
+            // Update the stats every millisecond
+            setInterval(() => {
+                updateStats();  // Update stats continuously
+            }, 10); // Update every 10ms
         };
     </script>
 </head>
@@ -180,6 +225,12 @@
             <p>
                 Experimt uses your device's motion sensors to measure acceleration in real-time. The graph below shows the magnitude of the movement as detected by the device's accelerometer.
             </p>
+            <div id="stats">
+                <div class="stat" id="sec">Movement in sec: 0s</div>
+                <div class="stat" id="movement">Current Movement: 0 m/s²</div>
+                <div class="stat" id="peak">Peak Movement: 0 m/s²</div>
+                <div class="stat" id="secMovement">Movement in last second: 0 m/s²</div>
+            </div>
             <div id="graph-container">
                 <canvas id="movementGraph"></canvas>
             </div>
