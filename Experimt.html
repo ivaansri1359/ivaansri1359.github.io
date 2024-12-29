@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 10px;
+            margin: 0;
             padding: 0;
             text-align: center;
         }
@@ -16,15 +16,14 @@
             background-color: #333;
             color: white;
             padding: 1em 0;
-            border-radius: 10px;
-            margin: 0 10px;
+            margin: 0;
         }
         header h1 {
             margin: 0;
             font-size: 1.5em;
         }
         main {
-            padding: 2em;
+            padding: 1em;
         }
         .content {
             background-color: #f4f4f4;
@@ -39,20 +38,57 @@
             background-color: #333;
             color: white;
             padding: 1em 0;
-            margin: 0 10px;
-            border-radius: 10px;
+            margin: 0;
             margin-top: 20px;
         }
-        canvas {
-            max-width: 100%;
-            height: 400px;
+        #graph-container {
+            position: relative;
             margin: 20px auto;
+            max-width: 800px;
+            text-align: center;
+        }
+        canvas {
+            width: 100%;
+            height: 400px;
+        }
+        .fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            background-color: white;
+            padding: 10px;
+            overflow: hidden;
+        }
+        .fullscreen canvas {
+            width: 100%;
+            height: 100%;
+        }
+        .fullscreen-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
         }
     </style>
     <script>
         let chart = null;
         let time = 0;
         let movementData = [];
+        let isFullscreen = false;
 
         function initializeGraph() {
             const ctx = document.getElementById('movementGraph').getContext('2d');
@@ -71,6 +107,8 @@
                     }]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         x: {
                             title: { display: true, text: 'Time (s)' },
@@ -107,7 +145,6 @@
                 window.addEventListener('devicemotion', (event) => {
                     const acc = event.acceleration;
                     if (acc && acc.x !== null) {
-                        // Calculate the magnitude of acceleration
                         const magnitude = Math.sqrt(acc.x ** 2 + acc.y ** 2 + acc.z ** 2);
                         updateGraph(magnitude.toFixed(2));
                     }
@@ -115,6 +152,16 @@
             } else {
                 alert("DeviceMotion is not supported on your device.");
             }
+        }
+
+        function toggleFullscreen() {
+            const graphContainer = document.getElementById('graph-container');
+            if (isFullscreen) {
+                graphContainer.classList.remove('fullscreen');
+            } else {
+                graphContainer.classList.add('fullscreen');
+            }
+            isFullscreen = !isFullscreen;
         }
 
         window.onload = function () {
@@ -133,8 +180,12 @@
             <p>
                 Experimt uses your device's motion sensors to measure acceleration in real-time. The graph below shows the magnitude of the movement as detected by the device's accelerometer.
             </p>
-            <h2>Live Movement Graph</h2>
-            <canvas id="movementGraph"></canvas>
+            <div id="graph-container">
+                <div class="fullscreen-buttons">
+                    <button class="btn" onclick="toggleFullscreen()">Toggle Fullscreen</button>
+                </div>
+                <canvas id="movementGraph"></canvas>
+            </div>
         </div>
     </main>
     <footer>
