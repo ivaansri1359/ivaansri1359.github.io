@@ -194,17 +194,22 @@
         }
 
         // Adjust notification frequency based on slider
-        function adjustNotificationFrequency(rate) {
-            if (notificationInterval) clearInterval(notificationInterval);
+function adjustNotificationFrequency(rate) {
+    if (notificationInterval) clearInterval(notificationInterval);
 
-            if (rate === '0') {
-                return; // No notifications when slider is at 0
-            }
+    if (rate === '0') {
+        return; // No notifications when slider is at 0
+    }
 
-            let interval = Math.max(1000 / rate, 100); // Ensure minimum 1 notification every 100ms
-            
-            notificationInterval = setInterval(() => addNotification(), interval);
-        }
+    // Calculate interval for slower notifications
+    let interval = Math.max(2000 / rate, 1000); // Ensure minimum interval of 1 second
+    if (rate > 0 && rate < 1) {
+        interval = 2000; // 2 seconds per notification for slow rates
+    }
+
+    notificationInterval = setInterval(() => addNotification(), interval);
+}
+
 
         // Add a notification
         function addNotification() {
