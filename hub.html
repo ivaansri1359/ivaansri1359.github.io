@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Hub</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1em 0;
+            margin: 10px;
+            border-radius: 10px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        main {
+            padding: 2em;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .gallery-item {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .calendar {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .calendar-day {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .calendar-day:hover {
+            background-color: #eaeaea;
+        }
+
+        .calendar-header {
+            font-weight: bold;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .calendar-day.today {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 1em 0;
+            margin: 10px;
+            border-radius: 10px;
+        }
+
+        footer a {
+            color: #58a6ff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .event-placeholder {
+            margin-top: 10px;
+            padding: 5px;
+            background-color: #ff9800;
+            color: white;
+            border-radius: 3px;
+        }
+
+        .search-input {
+            padding: 8px;
+            margin: 10px;
+            width: 80%;
+            max-width: 300px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1><a href="ivaansri1359.gihtub.io">./</a>Community Hub</h1>
+    </header>
+
+    <main>
+        <!-- Search Section -->
+        <input type="text" id="searchInput" class="search-input" placeholder="Search gallery items..." oninput="filterGallery()">
+
+        <!-- Gallery Section -->
+        <h2>Gallery</h2>
+        <div class="gallery" id="gallery">
+            <!-- Editable Gallery Items -->
+            <div class="gallery-item">
+                <h3 contenteditable="true" class="editable-title"><a href="https://ivaansri1359.notion.site/Welcome-to-our-community-1-1-25-16e2ee17df55805ea1b5fd28fd7029e8?pvs=4">Welcome to the Community</a></h3>
+                <p contenteditable="true" class="editable-description">Description</p>
+            </div>
+        </div>
+        <button id="loadMore" onclick="loadMoreItems()">Load More</button>
+
+        <!-- Calendar Section -->
+        <h2>Calendar</h2>
+        <div>
+            <button onclick="changeMonth(-1)">Previous</button>
+            <span id="monthTitle"></span>
+            <button onclick="changeMonth(1)">Next</button>
+        </div>
+        <br>
+        <div id="calendar" class="calendar">
+            <!-- Calendar will be dynamically generated here -->
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Community Hub. All rights reserved.</p>
+        <p><a href="https://discord.gg/f2S5HQ6Xx7" target="_blank">Join the Discord</a></p>
+    </footer>
+
+    <script>
+        let eventItems = [
+            {
+                title: "Welcome to our community", // The title of the event
+                date: "2025-1-1", // The date of the event in the format: year-month-day
+                link: "https://ivaansri1359.notion.site/Welcome-to-our-community-1-1-25-16e2ee17df55805ea1b5fd28fd7029e8?pvs=4" // (Optional) A link related to the event, such as a registration page or more info
+            }
+        ];
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        // Function to create the calendar
+        function generateCalendar() {
+            const calendarElement = document.getElementById('calendar');
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const today = new Date();
+
+            // Update the month title
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            document.getElementById('monthTitle').textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+            calendarElement.innerHTML = '';
+            const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+            // Add days of the week header
+            daysOfWeek.forEach(day => {
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('calendar-header');
+                dayElement.textContent = day;
+                calendarElement.appendChild(dayElement);
+            });
+
+            // Add empty spaces before the first day of the month
+            for (let i = 0; i < firstDay; i++) {
+                const emptySpace = document.createElement('div');
+                calendarElement.appendChild(emptySpace);
+            }
+
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('calendar-day');
+                dayElement.textContent = day;
+
+                // Add a "today" class to highlight the current date
+                if (today.getDate() === day && today.getMonth() === currentMonth && today.getFullYear() === currentYear) {
+                    dayElement.classList.add('today');
+                }
+
+                // Optional: Add event placeholders for days
+                eventItems.forEach(event => {
+                    if (new Date(event.date).getDate() === day && new Date(event.date).getMonth() === currentMonth) {
+                        const eventDiv = document.createElement('div');
+                        eventDiv.classList.add('event');
+                        eventDiv.innerHTML = `<a href="${event.link}" target="_blank">${event.title}</a>`;
+                        dayElement.appendChild(eventDiv);
+                    }
+                });
+
+                calendarElement.appendChild(dayElement);
+            }
+        }
+
+        // Function to change the month (previous or next)
+        function changeMonth(direction) {
+            currentMonth += direction;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            generateCalendar();
+        }
+
+        // Function to show more items
+        function loadMoreItems() {
+            const hiddenItems = document.querySelectorAll('.gallery-item.hidden');
+            hiddenItems.forEach(item => item.classList.remove('hidden'));
+            document.getElementById('loadMore').style.display = 'none'; // Hide the "Load More" button
+        }
+
+        // Function to filter the gallery based on search input
+        function filterGallery() {
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const items = document.querySelectorAll('.gallery-item');
+
+            items.forEach(item => {
+                const title = item.querySelector('.editable-title').textContent.toLowerCase();
+                const description = item.querySelector('.editable-description').textContent.toLowerCase();
+                
+                if (title.includes(searchQuery) || description.includes(searchQuery)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize the calendar and show limited items
+        window.onload = function() {
+            generateCalendar();
+            const items = document.querySelectorAll('.gallery-item');
+            for (let i = 10; i < items.length; i++) {
+                items[i].classList.add('hidden');
+            }
+        };
+    </script>
+</body>
+</html>
