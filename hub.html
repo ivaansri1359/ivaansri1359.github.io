@@ -135,8 +135,8 @@
         <div class="gallery" id="gallery">
             <!-- Editable Gallery Items -->
             <div class="gallery-item">
-                <h3 contenteditable="true" class="editable-title"><a href="https://ivaansri1359.notion.site/Welcome-to-our-community-1-1-25-16e2ee17df55805ea1b5fd28fd7029e8?pvs=4">Welcome to the Community</a></h3>
-                <p contenteditable="true" class="editable-description">Description</p>
+                <h3><a href="https://ivaansri1359.notion.site/Welcome-to-our-community-1-1-25-16e2ee17df55805ea1b5fd28fd7029e8?pvs=4" target="_blank">Welcome to the Community</a></h3>
+                <p>Description</p>
             </div>
         </div>
         <button id="loadMore" onclick="loadMoreItems()">Load More</button>
@@ -249,7 +249,7 @@
             const items = document.querySelectorAll('.gallery-item');
 
             items.forEach(item => {
-                const title = item.querySelector('.editable-title').textContent.toLowerCase();
+                const title = item.querySelector('a').textContent.toLowerCase();
                 const description = item.querySelector('.editable-description').textContent.toLowerCase();
                 
                 if (title.includes(searchQuery) || description.includes(searchQuery)) {
