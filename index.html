@@ -204,13 +204,13 @@
         async function handleSubmit(event) {
             event.preventDefault();
             const name = document.getElementById('name').value;
-            const email = document.getElementById('email/discord').value;
+            const email = document.getElementById('email').value;
             const message = document.getElementById('message').value;
 
             const webhookUrl = "https://discord.com/api/webhooks/1324350553370923020/Gpk_8v6Fq3Duyk07-oVya4PAy1Qi5p4V1tJVEzo5fbFIP4ZVwJB2Uiv4kcZ30OMBiDCa";
 
             const payload = {
-                content: `**New Contribution Received**\n**Name**: ${name}\n**Email**: ${email}\n**Message**: ${message}`
+                content: `**New Contribution Received**\n**Name**: ${name}\n**Email/Discord**: ${email}\n**Message**: ${message}`
             };
 
             try {
