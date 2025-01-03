@@ -164,9 +164,10 @@
                 <a href="https://discord.gg/f2S5HQ6Xx7">join our discord</a>)
             </p>
             <form onsubmit="handleSubmit(event)">
-                <input type="text" id="name" placeholder="Your Name" required>
-                <input type="text" id="email" placeholder="Your Email/discord(with @)" required>
-                <textarea id="message" rows="5" placeholder="Your Message" required></textarea>
+                <input type="text" id="name" placeholder="Your Name" >
+                <input type="text" id="email" placeholder="Your Email/discord(with @)" >
+                <input type="text" id="make" placeholder="Creation Name" >
+                <textarea id="message" rows="5" placeholder="Your Code" required></textarea>
                 <button type="submit">Send</button>
                 <button type="button" onclick="closePopup()">Cancel</button>
             </form>
@@ -206,11 +207,12 @@
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const message = document.getElementById('message').value;
+            const make = document.getElementById('make').value;
 
             const webhookUrl = "https://discord.com/api/webhooks/1324350553370923020/Gpk_8v6Fq3Duyk07-oVya4PAy1Qi5p4V1tJVEzo5fbFIP4ZVwJB2Uiv4kcZ30OMBiDCa";
 
             const payload = {
-                content: `**New Contribution Received**\n**Name**: ${name}\n**Email/Discord**: ${email}\n**Message**: ${message}`
+                content: `**New Contribution Received**\n**Name**: ${name}\n**Email/Discord**: ${email}\n**Message**: ${message}\n**Make**: ${make}`
             };
 
             try {
