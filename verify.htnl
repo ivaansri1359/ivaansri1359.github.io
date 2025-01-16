@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code & PIN Generator</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+</head>
+<body>
+  <h1>QR Code & PIN Generator</h1>
+  <div id="qrcode"></div>
+  <p>PIN: <span id="pin"></span></p>
+  <button id="refresh">Generate New QR Code & PIN</button>
+
+  <script>
+    function generateQR() {
+      const pin = Math.floor(1000 + Math.random() * 9000); // Generate 4-digit PIN
+      const data = JSON.stringify({ pin, timestamp: new Date().getTime() });
+      
+      document.getElementById("pin").textContent = pin;
+      
+      const qrContainer = document.getElementById("qrcode");
+      qrContainer.innerHTML = ""; // Clear previous QR
+      QRCode.toCanvas(qrContainer, data, { width: 200 }, (error) => {
+        if (error) console.error(error);
+      });
+    }
+
+    document.getElementById("refresh").addEventListener("click", generateQR);
+    generateQR(); // Generate on load
+  </script>
+</body>
+</html>
