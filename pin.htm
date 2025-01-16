@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIN Verification</title>
+    <script src="https://cdn.jsdelivr.net/npm/otplib@12.0.0/build/otplib.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .verification-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .verification-form input {
+            font-size: 20px;
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            margin: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .verification-form button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .verification-form button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .correct {
+            color: green;
+        }
+        .wrong {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="verification-form">
+        <h2>Enter 6-digit PIN</h2>
+        <input type="text" id="pin1" maxlength="1" oninput="moveFocus(1)">
+        <input type="text" id="pin2" maxlength="1" oninput="moveFocus(2)">
+        <input type="text" id="pin3" maxlength="1" oninput="moveFocus(3)">
+        <input type="text" id="pin4" maxlength="1" oninput="moveFocus(4)">
+        <input type="text" id="pin5" maxlength="1" oninput="moveFocus(5)">
+        <input type="text" id="pin6" maxlength="1" oninput="moveFocus(6)">
+        <br><br>
+        <button onclick="verifyPin()">Verify PIN</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        // The secret key you are using for TOTP generation
+        const secret = 'homeiscoolfool';
+
+        function moveFocus(index) {
+            const nextInput = document.getElementById('pin' + (index + 1));
+            if (nextInput && nextInput.value !== '') {
+                nextInput.focus();
+            }
+        }
+
+        function verifyPin() {
+            const pin = document.getElementById('pin1').value +
+                        document.getElementById('pin2').value +
+                        document.getElementById('pin3').value +
+                        document.getElementById('pin4').value +
+                        document.getElementById('pin5').value +
+                        document.getElementById('pin6').value;
+
+            const result = document.getElementById('result');
+
+            if (pin.length === 6) {
+                // Use otplib to generate the current TOTP code for the secret
+                const generatedPin = otplib.authenticator.generate(secret);
+
+                if (pin === generatedPin) {
+                    result.textContent = "Correct PIN!";
+                    result.className = "result correct";
+                } else {
+                    result.textContent = "Wrong PIN!";
+                    result.className = "result wrong";
+                }
+            } else {
+                result.textContent = "Please enter a 6-digit PIN.";
+                result.className = "result wrong";
+            }
+        }
+    </script>
+
+</body>
+</html>
