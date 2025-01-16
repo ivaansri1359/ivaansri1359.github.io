@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Scanner & Validator</title>
+  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+</head>
+<body>
+  <h1>QR Code Scanner & Validator</h1>
+  <div id="reader" style="width: 300px; height: 300px;"></div>
+  <p>Enter PIN (if required): <input type="text" id="pin-input" /></p>
+  <button id="validate">Validate</button>
+  <p id="result"></p>
+
+  <script>
+    const reader = new Html5Qrcode("reader");
+    let scannedData = null;
+
+    reader.start(
+      { facingMode: "environment" },
+      { fps: 10 },
+      (decodedText) => {
+        scannedData = JSON.parse(decodedText);
+        document.getElementById("result").textContent = "QR Scanned!";
+      },
+      (errorMessage) => {}
+    );
+
+    document.getElementById("validate").addEventListener("click", () => {
+      const pin = document.getElementById("pin-input").value;
+      if (!scannedData) {
+        alert("Scan a QR code first!");
+        return;
+      }
+      
+      if (scannedData.pin === parseInt(pin) || pin === "") {
+        alert("Access Granted");
+      } else {
+        alert("Invalid PIN");
+      }
+    });
+  </script>
+</body>
+</html>
