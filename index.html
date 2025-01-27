@@ -1,251 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ivaansri1359</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            background-color: #fff;
-            color: #000;
-        }
-        header {
-            background-color: #333;
-            color: white;
-            padding: 1em 0;
-            border-radius: 10px;
-            margin: 10px;
-        }
-        header h1 {
-            margin: 0;
-            font-size: 1.5em;
-        }
-        main {
-            padding: 2em;
-        }
-        .search-bar {
-            margin: 20px auto;
-            max-width: 500px;
-            display: flex;
-            align-items: center;
-        }
-        .search-bar input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 1em;
-        }
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            margin: 20px;
-        }
-        .gallery-item {
-            background-color: #f4f4f4;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            transition: 0.3s ease;
-        }
-        .gallery-item.hidden {
-            display: none;
-        }
-        .gallery-item:hover {
-            background-color: #eaeaea;
-            transform: scale(1.05);
-        }
-        .popup {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            border: 2px solid #333;
-            padding: 20px;
-            z-index: 1000;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .popup-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-        .popup input, .popup textarea {
-            width: 100%;
-            margin: 10px 0;
-            padding: 8px;
-            font-size: 1em;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .popup button {
-            background-color: #333;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .popup button:hover {
-            background-color: #555;
-        }
-        footer {
-            background-color: #333;
-            color: white;
-            padding: 1em 0;
-            margin: 10px;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-        footer a {
-            color: #58a6ff;
-            text-decoration: none;
-            margin: 0 10px;
-        }
-        footer a:hover {
-            text-decoration: underline;
-        }
-        @media (max-width: 768px) {
-            .gallery {
-                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            }
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>ivaansri1359  </h1>
-    </header>
-    <main>
-       
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ivaansri1359's official site with social media links, posts, and contact form.">
+  <title>ivaansri1359</title>
 
-       
+  <!-- Font Awesome for Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
-        <h2>Gallery</h2>
-        <div class="gallery" id="gallery">
-            
-            <div class="gallery-item" data-title="Shop">
-                <h3><a href="https://github.com/ivaansri1359/Pit-thon">Pit-thon</a></h3>
-                <p>Tiny Python Projects.</p>
-            </div>
-            <br>
-        </div>
-        <h2>Social Media</h2>
-        <div class="gallery" id="gallery">
-            <div class="gallery-item" data-title="Shop">
-                <h3><a href="https://discord.gg/FEgFeevJ4m">Discord</a></h3>
-                
-            </div>
-            <div class="gallery-item" data-title="Shop">
-                <h3><a href="https://github.com/ivaansri1359">GitHub</a></h3>
-                
-            </div>
-            <div class="gallery-item" data-title="Shop">
-                <h3><a href="Youtube.com/@ivaansri">YT</a></h3>
-                
-            </div>
-            <div class="gallery-item" data-title="Shop">
-                <h3><a href="https://open.spotify.com/user/31fwa2szfczf7ucmwmrjxynrtlvm">Spotify</a></h3>
-                
-            </div>
-        </div>
-        
-        
-        
-        
-        <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
-        <div class="popup" id="popup">
-            <h2>Contribute</h2>
-            <p>
-                <br>
-                We Will recive a discord webhook
-                <br>
-                We will recive it but we may not respond 
-                <br>
-                if responded that maybe done by E-mail or Discord profile 
-                <br>
-                
-            </p>
-            <form onsubmit="handleSubmit(event)">
-                <input type="text" id="name" placeholder="Your Name" >
-                <input type="text" id="email" placeholder="Your Email/discord(with @)" >
-                <input type="text" id="make" placeholder="Creation Name" >
-                <textarea id="message" rows="10" placeholder="Your Code" required></textarea>
-                <button type="submit">Send</button>
-                <button type="button" onclick="closePopup()">Cancel</button>
-            </form>
-        </div>
-    </main>
-    <footer>
-        <p>&copy; 2024 ivaansri1359. All rights reserved.</p>
-        <p>
-            <a href="https://github.com/ivaansri1359">GitHub</a> |
-            <a href="mailto:ivaansri1359@gmail.com">Email</a> |
-            <a href="https://scratch.mit.edu/users/ivaansri/">Scratch</a>
-        </p>
-    </footer>
-    <script>
-        function filterGallery() {
-            const query = document.getElementById("searchInput").value.toLowerCase();
-            const items = document.querySelectorAll(".gallery-item");
-            items.forEach(item => {
-                const title = item.getAttribute("data-title").toLowerCase();
-                item.classList.toggle("hidden", !title.includes(query));
-            });
-        }
-
-        function openPopup() {
-            document.getElementById('popup').style.display = 'block';
-            document.getElementById('popupOverlay').style.display = 'block';
-        }
-
-        function closePopup() {
-            document.getElementById('popup').style.display = 'none';
-            document.getElementById('popupOverlay').style.display = 'none';
-        }
-
-        async function handleSubmit(event) {
-    event.preventDefault();
-    const name = document.getElementById('name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const make = document.getElementById('make').value.trim();
-    const message = document.getElementById('message').value.trim();
-
-    const webhookUrl = "https://discord.com/api/webhooks/1324697564338982912/Dco-_gYa5p292ZiLTfNKIXx9RZSNqHrwfegopGlGWYxxVXWR8FnKblovchgUtP10iV-G";
-
-    const payload = {
-        content: `**New Contribution Received**\n**Name**: ${name}\n**Email/Discord**: ${email}\n**Creation Name**: ${make}\n**Code**:\n\`\`\`\n${message}\n\`\`\``
-    };
-
-    try {
-        await fetch(webhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-        });
-        alert('Your contribution has been sent!');
-    } catch (error) {
-        console.error('Error sending to Discord:', error);
-        alert('There was an error sending your contribution. Please try again.');
+  <style>
+    /* Resetting default styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
     }
 
-    closePopup();
-}
+    body {
+      background-color: #121212;
+      color: #fff;
+      text-align: center;
+    }
 
-    </script>
+    /* Main Container */
+    .container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Header */
+    header {
+      padding-top: 40px;
+      padding-bottom: 20px;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    /* Social Links */
+    .social-links {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .social-links li {
+      margin: 0 15px;
+    }
+
+    .social-links a {
+      color: #fff;
+      font-size: 1.8rem;
+      transition: color 0.3s ease;
+      text-decoration: none;
+    }
+
+    .social-links a:hover {
+      color: #0077cc;
+    }
+
+    /* Section Titles */
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      color: #ddd;
+    }
+
+    /* Post Section */
+    .post-container {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .post {
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      padding: 20px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .post h3 {
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+    }
+
+    .post p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+    }
+
+    /* Contact Form */
+    #contact {
+      background-color: #0077cc;
+      padding: 40px 20px;
+      margin-top: 50px;
+      border-radius: 10px;
+    }
+
+    #contact h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 8px;
+      background-color: #fff;
+      color: #333;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    .contact-form button {
+      background-color: #fff;
+      color: #0077cc;
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .contact-form button:hover {
+      background-color: #0077cc;
+      color: #fff;
+    }
+
+    /* Music Player and Mute/Unmute Button */
+    .music-controls {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+    }
+
+    .music-controls button {
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      padding: 15px;
+      font-size: 1.5rem;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .music-controls button:hover {
+      background-color: #005fa3;
+    }
+
+    /* Responsive Design */
+    @media screen and (max-width: 600px) {
+      header h1 {
+        font-size: 2.5rem;
+      }
+
+      .social-links a {
+        font-size: 1.5rem;
+      }
+
+      .post h3 {
+        font-size: 1.4rem;
+      }
+
+      .post p {
+        font-size: 1rem;
+      }
+
+      .contact-form input,
+      .contact-form textarea {
+        font-size: 1.1rem;
+      }
+
+      .contact-form button {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>ivaansri1359</h1>
+      <p>Your hub for everything related to me!</p>
+    </header>
+
+    <!-- Social Media Links -->
+    <section id="social">
+      <h2>Follow Me</h2>
+      <ul class="social-links">
+        <li><a href="https://discord.gg/FEgFeevJ4m" target="_blank"><i class="fab fa-discord"></i></a></li>
+        <li><a href="https://www.youtube.com/@ivaansri" target="_blank"><i class="fab fa-youtube"></i></a></li>
+        <li><a href="https://github.com/ivaansri1359" target="_blank"><i class="fab fa-github"></i></a></li>
+        <li><a href="https://scratch.mit.edu/users/ivaansri/" target="_blank">Scratch</a></li>
+        <li><a href="https://open.spotify.com/user/31fwa2szfczf7ucmwmrjxynrtlvm" target="_blank"><i class="fab fa-spotify"></i></a></li>
+      </ul>
+    </section>
+
+    <!-- Posts Section -->
+    <section id="posts" class="post-container">
+      <h2>Latest Posts</h2>
+      
+      <!-- Post 1 -->
+      <div class="post">
+        <h3>My First Post</h3>
+        <p>This is my very first post on my website! Check it out.</p>
+      </div>
+
+      <!-- Post 2 -->
+      <div class="post">
+        <h3>New Project Launch</h3>
+        <p>I just launched a new project that you can try out!</p>
+      </div>
+
+      <!-- Post 3 -->
+      <div class="post">
+        <h3>Top 10 Music Tracks</h3>
+        <p>Here are the top 10 tracks I'm currently enjoying.</p>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+      <h2>Contact Me</h2>
+      <form class="contact-form" onsubmit="submitContactForm(event)">
+        <input type="text" id="name" placeholder="Your Name" required>
+        <input type="email" id="email" placeholder="Your Email" required>
+        <textarea id="message" placeholder="Your Message" required></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+    </section>
+  </div>
+
+  <!-- Music Player -->
+  <div class="music-controls">
+    <audio id="background-music" loop>
+      <source src="your-music-file.mp3" type="audio/mp3">
+      Your browser does not support the audio element.
+    </audio>
+    <button id="mute-button" onclick="toggleMute()"><i class="fas fa-volume-up"></i></button>
+  </div>
+
+  <script>
+    // Handle Music Mute/Unmute
+    let isMuted = false;
+    const musicPlayer = document.getElementById('background-music');
+    const muteButton = document.getElementById('mute-button');
+
+    function toggleMute() {
+      if (isMuted) {
+        musicPlayer.muted = false;
+        muteButton.innerHTML = '<i class="fas fa-volume-up"></i>';
+      } else {
+        musicPlayer.muted = true;
+        muteButton.innerHTML = '<i class="fas fa-volume-mute"></i>';
+      }
+      isMuted = !isMuted;
+    }
+
+    // Handle Form Submission
+    function submitContactForm(event) {
+      event.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+
+      alert(`Thank you, ${name}! We've received your message. We'll reach out to ${email}.`);
+      document.querySelector('.contact-form').reset(); // Reset form
+    }
+  </script>
+
 </body>
 </html>
